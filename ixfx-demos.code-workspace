@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"js/ts.implicitProjectConfig.checkJs": true,
+		"liveServer.settings.root": "./",
+		// "liveServer.settings.mount": [
+		// 	[
+		// 		"/ixfx/",
+		// 		"./node_modules/ixfx/dist/"
+		// 	]
+		// ]
+	}
+}

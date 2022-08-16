@@ -1,0 +1,22 @@
+{
+  "liveServer.settings.multiRootWorkspaceName": "ixfx-demos",
+  "js/ts.implicitProjectConfig.checkJs": true,
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/ixfx": true,
+    "**/*.code-search": true
+  },
+  "eslint.format.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "files.eol": "\n",
+  "spellright.language": [
+    "en"
+  ],
+  "spellright.documentTypes": [
+    "markdown",
+    "latex",
+    "plaintext"
+  ]
+}
