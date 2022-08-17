@@ -5,13 +5,12 @@
   "main": "index.html",
   "type": "module",
   "scripts": {
-    "start": "browser-sync start --config 'bs-config.js'",
-    "bs": "browser-sync start --config 'bs-config.js' --no-open",
+    "start": "browser-sync start --config 'bs-config.cjs'",
+    "bs": "browser-sync start --config 'bs-config.cjs' --no-open",
     "edge": "/Applications/Microsoft\\ Edge\\ Canary.app/Contents/MacOS/Microsoft\\ Edge\\ Canary --auto-open-devtools-for-tabs http://localhost:3000",
     "bs-edge": "npm run bs & npm run edge",
     "clean": "rimraf ixfx",
-    "copy-lite": "cpy . '../ixfx-demos-lite/'",
-    "make-lite": "rimraf ../ixfx-demos-lite/ixfx && rimraf ../ixfx-demos-lite/node_modules"
+    "make-light": "node make-light.js"
   },
   "repository": {
     "type": "git",
