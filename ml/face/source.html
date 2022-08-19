@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pose-detection source</title>
+  <title>face-detection source</title>
 </head>
 <style>
   :root {
@@ -69,28 +69,22 @@
 
 <body data-server-no-reload>
   <div class="overlay header">
-    <h1 style="display:inline">pose-detection</h1>
+    <h1 style="display:inline">face-detection</h1>
     <div style="flex-grow: 1; text-align:end; padding-right:1em">
       <button title="Toggle UI" id="btnToggleUi">🔼</button>
     </div>
-
   </div>
-  <script type="module" src="source.js"></script>
 
-  <!-- Always needed -->
+  <div class="overlay" id="data"></div>
+  <script type="module" src="source.js"></script>
+  <!-- Require the peer dependencies of face-detection. -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
 
-  <!-- For tfjs runtime -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+  <!-- You must explicitly require a TF.js backend if you're not using the TF.js union bundle. -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection"></script>
 
-  <!-- For mediapipe runtime -->
-  <!--
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
-  -->
 </body>
 
 </html>

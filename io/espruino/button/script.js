@@ -3,33 +3,31 @@ import { delay } from 'https://unpkg.com/ixfx/dist/flow.js';
 import { Espruino } from 'https://unpkg.com/ixfx/dist/io.js';
 
 const scripts = Object.freeze({
-  // Polls data at interval of 1 second
-  poll: `setInterval(()=>Bluetooth.println(JSON.stringify(Puck.accel())), 1000);NRF.on('disconnect',()=>reset());`,
-  // Sends back data as fast as it can
-  stream: `
-  Puck.accelOn(12.5);
-  Puck.on('accel', (a) => {
-    Bluetooth.println(JSON.stringify(a));
-  });
-  NRF.on('disconnect',()=>reset());`
+  // Whenever `BTN` changes, send data
+  trigger: `setWatch((evt) => Bluetooth.println(JSON.stringify({state:evt.state,time:evt.time,lastTime:evt.lastTime})), BTN, {edge:"both", debounce:50, repeat:true});NRF.on('disconnect', () => reset());`
 });
 
 const settings = Object.freeze({
-  script: scripts.poll,
+  script: scripts.trigger,
   // Filter device list
   device: `` // Put in the name of your device here, eg `Puck.js a123`
 });
 
 let state = Object.freeze({
-  acc: { x: 0, y: 0, z: 0 },
-  gyro: { x: 0, y: 0, z: 0 }
+  /** @type number */
+  time: 0,
+  /** @type number */
+  lastTime: 0,
+  /** @type boolean */
+  pressed:false
 });
 
 const useState = () => {
-  const { acc, gyro } = state;
-  
-  setHtml(`lblAcc`,  `acc:   x: ${acc.x} y: ${acc.y} z: ${acc.z}`);
-  setHtml(`lblGyro`, `gyro: x: ${gyro.x} y: ${gyro.y} z: ${gyro.z}`);
+  const { time, lastTime, pressed } = state;
+  const elapsed = time - (lastTime ?? time);
+  setHtml(`pressed`, `Pressed (${elapsed} elapsed)`);
+  console.log(`time: ${time} last: ${lastTime} pressed: ${pressed} elapsed: ${elapsed}`);
+  setClass(`pressed`, pressed, `on`);
 };
 
 const setHtml = (id, value) => {
@@ -38,6 +36,13 @@ const setHtml = (id, value) => {
   el.innerHTML = value;
 };
 
+
+const setClass = (id, value, className) => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (value) el.classList.add(className);
+  else el.classList.remove(className);
+};
 
 const setup = () => {
   const { script } = settings;
@@ -53,24 +58,25 @@ const setup = () => {
 
       // Connect to Puck
       const p = await Espruino.puck(opts);
+
       console.log(`Connected`);
       const onData = (evt) => {
-        // Don't even try to parse if it doesn't
-        // look like JSON
-        const data = evt.data.trim(); // Remove line breaks etc
+        let data = evt.data.trim(); // Remove line breaks etc
+        if (data.startsWith(`>`)) data = data.substring(1); // Trim off starting > if it appears
         if (!data.startsWith(`{`)) return;
         if (!data.endsWith(`}`)) return;
 
         try {
           const d = JSON.parse(data);
-          console.log(d);
           updateState({
-            acc: d.acc,
-            gyro: d.gyro
+            pressed: d.state,
+            time: d.time,
+            lastTime: d.lastTime
           });
           useState();
         } catch (ex) {
           console.warn(ex);
+          console.log(data);
         }
       };
       // Listen for events

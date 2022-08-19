@@ -1,18 +1,14 @@
 /**
- * This sketch expects a single source. Although it stores all received poses,
- * smoothing and drawing only the first.
+ * This sketch expects a single source. Although it stores all received faces,
+ * it smoothes and draws only the first.
  */
 // @ts-ignore
 import { Remote } from "https://unpkg.com/@clinth/remote@latest/dist/index.mjs";
 import * as Dom from 'https://unpkg.com/ixfx/dist/dom.js';
 import { Points } from 'https://unpkg.com/ixfx/dist/geometry.js';
-import { interpolate } from 'https://unpkg.com/ixfx/dist/data.js';
 
 const settings = Object.freeze({
   horizontalMirror: true,
-  // Ignores points under this threshold
-  keypointScoreThreshold: 0.3,
-
   // Interpolation amount applied per frame (0...1)
   // Lower = less jitter & more latency. Higher = more jitter & lower latency
   smoothingAmt: 0.2,
@@ -26,72 +22,78 @@ let state = Object.freeze({
     height: 0,
     center: { x: 0, y: 0 }
   },
-  /** @type {Pose[]} */
-  poses: [],
-  /** @type {Pose|undefined} */
-  smoothedPose: undefined
+  /** @type {Face[]} */
+  faces: [],
+  /** @type {Face|undefined} */
+  smoothedFace: undefined
 });
 
 /**
- * Received poses
- * @param {Pose[]} poses 
+ * Received data
+ * @param {Face[]} faces 
  */
-const onPoses = (poses) => {
+const onData = (faces) => {
   const { smoothingAmt } = settings;
-
-  // console.log(poses);
+  // Dump raw data
+  //console.log(faces);
     
-  if (poses.length === 0) return;
+  if (faces.length === 0) return;
   
-  // Smooth the first pose
-  // Multiple poses are not smoothed, because we cannot be sure that the
+  // Smooth the first face
+  // Multiple faces are not smoothed, because we cannot be sure that the
   // indexes of bodies are consistent
+  const firstFace = smooth(smoothingAmt, state.smoothedFace, faces[0]);
   updateState({ 
-    poses,
-    smoothedPose: smoothPose(smoothingAmt, state.smoothedPose, poses[0])
+    faces,
+    smoothedFace: firstFace
   });
 };
 
-
 /**
- * 
- * @param {Pose|undefined} a 
- * @param {Pose} b 
+ * Smooth a set of key points for a face.
+ * @param {number} amt
+ * @param {Face|undefined} a 
+ * @param {Face} b 
  */
-const smoothPose = (amt, a, b) => {
+const smooth = (amt, a, b) => {
   if (a === undefined && b === undefined) return;
   if (a === undefined) return b;
 
   // Assumes keypoint indexes match up.
-  // if the source is discarding points, this will break us
+  const smoothed = a.keypoints.map((kp, index) => smoothKeypoint(amt, kp, b.keypoints[index], index));
   return {
     ...b,
-    keypoints: a.keypoints.map((kp, index) => smoothKeypoint(amt, kp, b.keypoints[index]))
+    keypoints: smoothed
   };
 };
 
-const smoothKeypoint = (amt, a, b) => {
-  // Interpolate the score
-  const score = interpolate(amt, a.score, b.score);
+/**
+ * Smooths a single face key point
+ * @param {number} amt 
+ * @param {FaceKeypoint} a 
+ * @param {FaceKeypoint} b 
+ * @returns 
+ */
+const smoothKeypoint = (amt, a, b, index) => {
+  if (a.name !== b.name) throw new Error(`Probably do not want to smooth different keypoints? ${a.name} and ${b.name}`);
 
-  // Interpolate the x,y
+  // Interpolate the x,y 
   const pos = Points.interpolate(amt, a, b);
-
+ 
   // Combine together and return
   return {
     ...pos,
-    score
+    name: a.name
   };
 };
 
-
 /**
- * Draw a pose
- * @param {Pose} p 
+ * Draw a face
+ * @param {Face} p 
  * @param {CanvasRenderingContext2D} ctx 
  */
-const drawPose = (ctx, p) => {
-  const { horizontalMirror, keypointScoreThreshold, labelFont } = settings;
+const draw = (ctx, p) => {
+  const { horizontalMirror, labelFont } = settings;
   const { bounds } = state;
 
   const radius = 10;
@@ -113,7 +115,6 @@ const drawPose = (ctx, p) => {
 
   // Draw each keypoint
   p.keypoints.forEach(kp => {
-    if (kp.score === undefined || kp.score < keypointScoreThreshold) return;
     const abs = absPoint(kp);
 
     // Translate canvas to be centered on predicted object
@@ -126,10 +127,7 @@ const drawPose = (ctx, p) => {
     ctx.fill();
 
     // Draw label for key point
-    const txtSize = drawCenteredText(kp.name, ctx, 0, textOffsetY);
-
-    // Draw score
-    drawCenteredText(Math.floor(kp.score * 100) + `%`, ctx, 0, textOffsetY + txtSize.fontBoundingBoxAscent + txtSize.fontBoundingBoxDescent);
+    drawCenteredText(kp.name, ctx, 0, textOffsetY);
 
     // Undo translate transform
     ctx.restore();
@@ -169,7 +167,7 @@ const clear = (ctx) => {
 };
 
 const useState = () => {
-  const { smoothedPose } = state;
+  const { smoothedFace } = state;
 
   const canvasEl = /** @type {HTMLCanvasElement|null}*/(document.getElementById(`canvas`));
   const ctx = canvasEl?.getContext(`2d`);
@@ -178,8 +176,8 @@ const useState = () => {
   // Clear and draw current state
   clear(ctx);
   
-  if (smoothedPose === undefined) return;
-  drawPose(ctx, smoothedPose);
+  if (smoothedFace === undefined) return;
+  draw(ctx, smoothedFace);
 };
 
 const setup = async () => {
@@ -188,7 +186,7 @@ const setup = async () => {
   // Listen for data from the remote
   remote.onData = (d) => {
     if (d.data && Array.isArray(d.data)) {
-      onPoses(d.data);
+      onData(d.data);
     } else {
       console.warn(`Got data we did not expect`);
       console.log(d);
@@ -228,5 +226,6 @@ function updateState (s) {
 /**
  * @typedef { import("../common-vision-source").Keypoint } Keypoint
  * @typedef { import("../common-vision-source").Box } Box
- * @typedef { import("../common-vision-source").Pose } Pose
+ * @typedef { import("../common-vision-source").Face } Face
+ * @typedef { import("../common-vision-source").FaceKeypoint } FaceKeypoint
  */

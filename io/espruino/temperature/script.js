@@ -1,12 +1,14 @@
-/**
- * Sends a small script to the Espruino so that it sends a temperature
- * reading every five seconds.
- */
 import { delay } from 'https://unpkg.com/ixfx/dist/flow.js';
 import { Espruino } from 'https://unpkg.com/ixfx/dist/io.js';
 
+const scripts = Object.freeze({
+  poll: `setInterval(()=>Bluetooth.println(E.getTemperature()), 1000);NRF.on('disconnect',()=>reset());`
+});
+
 const settings = Object.freeze({
-  script: `setInterval(()=>Bluetooth.println(E.getTemperature()), 5000);NRF.on('disconnect',()=>reset());`
+  script: scripts.poll,
+  // Filter device list
+  device: `` // Put in the name of your device here, eg `Puck.js a123`
 });
 
 let state = Object.freeze({
@@ -54,8 +56,11 @@ const setup = () => {
 
   document.getElementById(`btnConnect`)?.addEventListener(`click`, async () => {
     try {
+      // Filter by name, if defined in settings
+      const opts = settings.device.length > 0 ? { name: settings.device } : {};
+
       // Connect to Puck
-      const p = await Espruino.puck();
+      const p = await Espruino.puck(opts);
 
       // Listen for events
       p.addEventListener(`change`, evt => {

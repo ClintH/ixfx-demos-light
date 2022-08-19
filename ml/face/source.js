@@ -9,16 +9,6 @@
  * * setup() does TFJS initialisation based on settings
  * * postCaptureDraw(): Draws visuals on top of capture canvas
  * 
- * Also supports two URL query parameters to set default settings
- * eg: source.html?base=mobilenet_v2&maxNumBoxes=1
- * 
- * Query Parameters:
- * * base: 'lite_mobilenet_v2' or 'mobilenet_v2' (default: lite_mobilenet_v2)
- * * maxNumBoxes: maximum number of objects (default: 20)
- * * minScore: minimum score for an object (default: 0.5)
- * 
- * More info on COCO-SSD:
- * https://github.com/tensorflow/tfjs-models/tree/master/coco-ssd
  */
 // @ts-ignore
 import { Remote } from 'https://unpkg.com/@clinth/remote@latest/dist/index.mjs';
@@ -27,14 +17,9 @@ import * as CommonSource from '../common-vision-source.js';
 
 const searchParams = new URLSearchParams(window.location.search);
 
-const cocoSsdSettings = Object.freeze({
-  // lite_mobilenet_v2: fastest and smallest download
-  // mobilenet_v2: most accurate
-  base: searchParams.get(`base`) ?? `lite_mobilenet_v2`,
-  // Maximum number of objects
-  maxNumBoxes: getNumberParam(`maxNumBoxes`, 20),
-  // Minimum score (0..1)
-  minScore:getNumberParam(`minScore`, 0.5)
+const detectorSettings = Object.freeze({
+  runtime: `mediapipe`,
+  solutionPath: `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection`
 });
 
 const settings = Object.freeze({
@@ -58,32 +43,15 @@ const settings = Object.freeze({
 });
 
 let state = Object.freeze({
-  /** @type {CommonSource.ObjectDetector|undefined} */
+  /** @type {CommonSource.FaceDetector|undefined} */
   detector:undefined,
   frameSize: { width: 0, height: 0 },
-  /** @type {CommonSource.ObjectPrediction[]} */
-  predictions: [],
-  /** @type {CommonSource.ObjectPrediction[]} */
+  /** @type {CommonSource.Face[]} */
+  faces: [],
+  /** @type {CommonSource.Face[]} */
   normalised: [],
-  sourceReadMs: 10,
-  greatestNumberOfPredictions: 0,
-  classHues: new Map()
+  sourceReadMs: 10
 });
-
-/**
- * Gets a hue for a given class.
- * @param {string} className 
- */
-const getClassHue = (className) => {
-  const { classHues } = state;
-  let c = classHues.get(className);
-  if (c === undefined) {
-    // Generate a random hue based on the total number of seen objects
-    c = Math.round(([ ...classHues.keys() ].length) * 137.508);
-    classHues.set(className, c);
-  }
-  return c;
-};
 
 /**
  * Called by CommonSource when there is a new image to process
@@ -91,41 +59,41 @@ const getClassHue = (className) => {
  */
 const onFrame = async (frame, frameRect, timestamp_) => {
   const { detector } = state;
-  const { frameSize } = state;
 
-  if (!detector) return;
+  // Get timestamp that https://unpkg.com/ixfx/dist's Video.manualCapture stamps on to ImageData 
+  // @ts-ignore
+  const timestamp = frame.currentTime ?? timestamp_;
 
-  const predictions = await detector.detect(
-    frame, 
-    cocoSsdSettings.maxNumBoxes, 
-    cocoSsdSettings.minScore
-  );
+  // Get faces from TensorFlow.js
+  /** @type {CommonSource.Face[]} */
+  const faces = await detector?.estimateFaces(frame, {}, timestamp);
 
   // Process them
-  handlePredictions(predictions, frameRect);
+  handleFaces(faces, frameRect);
 };
 
+const getHue = (index) => Math.round((index) * 137.508);
+
 /**
- * Handles a pose, directly from TFJS or via recorder playback
- * @param {CommonSource.ObjectPrediction[]} predictions 
+ * Handles faces, directly from TFJS or via recorder playback
+ * @param {CommonSource.Face[]} faces 
  * @param {{width:number,height:number}} frameRect 
  */
-const handlePredictions = (predictions, frameRect) => {
+const handleFaces = (faces, frameRect) => {
   const w = frameRect.width;
   const h = frameRect.height;
 
-  // Create normalised version of predictions
-  const normalised = predictions.map(p => {
-    const bbox = Rects.fromNumbers(...p.bbox);
-    return {
-      ...p,
-      bbox: Rects.toArray(Rects.normaliseByRect(bbox, w, h))
-    };
-  });
+  // Normalise x,y of key points on 0..1 scale, based on size of source frame
+  const normalised = faces.map(face => ({
+    ...face,
+    keypoints: face.keypoints.map(kp => ({
+      ...kp,
+      x: kp.x / w,
+      y: kp.y / h
+    }))
+  }));
 
-  // Update state
-  // @ts-ignore
-  updateState({ predictions, normalised });
+  updateState({ normalised, faces });
 
   // Send normalised data via Remote
   if (state.normalised.length > 0) {
@@ -133,37 +101,33 @@ const handlePredictions = (predictions, frameRect) => {
   }
 
   // Update text display
-  CommonSource.displayListResults(() => 
-    state.predictions.map(
-      (p) => p.score ? `<span style="color: hsl(${getClassHue(p.class)},90%,40%)">${p.class} ${Math.floor(p.score * 100)}%</span>` : `?`));
+  CommonSource.displayListResults(() => state.faces.map((p, index) => p.score ? `<span style="color: hsl(${getHue(index)},100%,50%)">${Math.floor(p.score * 100)}%</span>` : `?`));
 
   // Pass data down to be used by recorder, if active
-  CommonSource.onRecordData(predictions, frameRect);
+  CommonSource.onRecordData(faces, frameRect);
 };
-
 
 /**
  * Received data via playback
- * @param {CommonSource.ObjectPrediction[]|CommonSource.Pose[]} frame
+ * @param {CommonSource.Face[]|CommonSource.Pose[]|CommonSource.ObjectPrediction[]} frame
  * @param {number} index
  * @param {CommonSource.Recording} rec 
  */
 const onPlayback = (frame, index, rec) => {
   // Run normalisation and send data as usual...
-  handlePredictions(/** @type {CommonSource.ObjectPrediction[]} */(frame), rec.frameSize);
-
-  // Manually trigger drawing
-  // const c = CommonSource.getDrawingContext();
-  // if (c === undefined) return;
-  // postCaptureDraw(c.ctx, c.width, c.height);
+  handleFaces(/** @type {CommonSource.Face[]}*/(frame), rec.frameSize);
 };
 
 async function createDetector() {
   // @ts-ignore
   // eslint-disable-next-line no-undef
-  const d = /** @type {CommonSource.ObjectDetector} */(await cocoSsd.load(cocoSsdSettings));
+  const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
+
+  // @ts-ignore
+  // eslint-disable-next-line no-undef
+  const d = /** @type {CommonSource.FaceDetector} */(await faceDetection.createDetector(model, detectorSettings));
   
-  CommonSource.status(`COCO-SSD (${cocoSsdSettings.base})`);
+  CommonSource.status(`Face (${detectorSettings.runtime})`);
   CommonSource.enableTextDisplayResults(true);
   return d;
 }
@@ -176,27 +140,33 @@ async function createDetector() {
  * @param {number} height 
  */
 function postCaptureDraw(ctx, width, height) {
-  const { predictions } = state;
+  const { faces } = state;
 
   ctx.font = `12pt ${settings.labelFont}`;
-  ctx.lineWidth = 3;
 
-  // Draw each prediction bounding box
-  predictions.forEach(p => {
-    // Use colour we've associated with the prediction class
-    const hue = getClassHue(p.class);
-    ctx.fillStyle = ctx.strokeStyle = `hsla(${hue}, 100%, 40%, 0.8)`;
+  // Draw each pose
+  faces.forEach((face, index) => {
+    // Generate distinctive hue for each pose
+    const poseHue = getHue(index);
 
-    let x = p.bbox[0];
-    let y = p.bbox[1];
-    let w = p.bbox[2];
-    let h = p.bbox[3];
-    ctx.strokeRect(x, y, w, h);
-    ctx.textBaseline = `top`;
-    ctx.fillText(`${p.class} (${Math.round(p.score*100)}%)`, x + 2, y + 2);
+    // Keep track of points by name
+    const map = new Map();
+
+    // Draw each key point as a labelled dot
+    face.keypoints.forEach(kp => {
+      map.set(kp.name, kp);
+
+      ctx.save();
+      ctx.translate(kp.x, kp.y);
+
+      ctx.fillStyle = ctx.strokeStyle = `hsl(${poseHue},100%,30%)`;
+      
+      // Draw a dot for each key point
+      CommonSource.drawDot(ctx, 0, 0, settings.pointRadius, true, false);
+      ctx.restore();
+    });
   });
 }
-
 
 /**
  * Find a camera by its label

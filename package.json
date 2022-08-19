@@ -9,7 +9,7 @@
     "bs": "browser-sync start --config 'bs-config.cjs' --no-open",
     "edge": "/Applications/Microsoft\\ Edge\\ Canary.app/Contents/MacOS/Microsoft\\ Edge\\ Canary --auto-open-devtools-for-tabs http://localhost:3000",
     "bs-edge": "npm run bs & npm run edge",
-    "clean": "rimraf ixfx",
+    "clean": "npx del-cli ixfx",
     "make-light": "node make-light.js"
   },
   "repository": {
@@ -31,6 +31,7 @@
     "cpy": "^9.0.1",
     "cpy-cli": "^4.1.0",
     "eslint": "^8.20.0",
-    "replace-in-file": "^6.3.5"
+    "replace-in-file": "^6.3.5",
+    "sync-glitch-cli": "^2.0.1"
   }
 }
