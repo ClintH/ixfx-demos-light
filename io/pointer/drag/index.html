@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>thing</title>
+  <title>drag</title>
 </head>
 
 <body>
@@ -18,32 +18,37 @@
     }
 
     :root {
-      --hue: 200;
+      --hue: 90;
       --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-      --bg: hsl(var(--hue), 10%, 80%);
-      --fg: hsl(var(--hue), 100%, 30%);
+      --bg: hsl(var(--hue), 10%, 10%);
+      --fg: hsl(var(--hue), 100%, 80%);
     }
 
     body {
       background-color: var(--bg);
       color: var(--fg);
       font-family: var(--font);
+      overflow: hidden;
     }
 
-    #thing {
+    .thing {
       position: absolute;
-      border: 2px solid black;
-      width: 1em;
-      height: 1em;
       left: 0;
       top: 0;
-      background-color: var(--fg);
+      background-color: hsla(var(--hue), 50%, 50%, 0.5);
+      transition: background 0.5s ease-in;
+    }
+
+    .thing:hover {
+      background-color: hsla(var(--hue), 50%, 50%, 0.7);
+    }
+
+    .dragging {
+      border: 4px solid var(--fg);
     }
   </style>
   <section>
-    <h1>thing</h1>
-    <div id="thing"></div>
-    <script type="module" src="thing.js"></script>
+    <script type="module" src="script.js"></script>
   </section>
 </body>
 
