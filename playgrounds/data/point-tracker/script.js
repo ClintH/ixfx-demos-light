@@ -3,7 +3,8 @@ import { Points } from 'https://unpkg.com/ixfx/dist/geometry.js';
 import { pointTracker } from 'https://unpkg.com/ixfx/dist/data.js';
 
 const settings = Object.freeze({
-  tracker: pointTracker(`pt`, {
+  tracker: pointTracker( {
+    id:`pt`,
     storeIntermediate: true 
   }),
   dtInitial: Dom.dataTable(`#infoInitial`, undefined,{ formatter }),
