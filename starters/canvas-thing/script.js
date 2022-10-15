@@ -1,8 +1,11 @@
 import * as Dom from 'https://unpkg.com/ixfx/dist/dom.js';
 import { Points } from 'https://unpkg.com/ixfx/dist/geometry.js';
+import { clamp } from 'https://unpkg.com/ixfx/dist/data.js';
 
 // Define settings - properties that don't change
 const settings = Object.freeze({
+  circleColour: `black`,
+  textColour: `white`,
   tickLoopMs: 10
 });
 
@@ -14,7 +17,15 @@ let state = Object.freeze({
     center: { x: 0, y: 0 },
   },
   /** @type number */
-  scaleBy: 1
+  scaleBy: 1,
+  circle: {
+    x: 0.5,
+    y: 0.5,
+    radius: 0.5,
+    radiusIncrement: 0.01
+  },
+  /** @type {number} */
+  ticks: 0
 });
 
 /**
@@ -23,8 +34,32 @@ let state = Object.freeze({
  * mutating state in some manner
  */
 const tick = () => {
-  // Do some calculations
-  // and call updateState({ ... })
+  let { ticks, circle } = state;
+  let { radius, radiusIncrement } = circle;
+
+  // Increment ticks
+  ticks++;
+
+  // If radius is at 100% or 0%, flip the
+  // direction of radius incrementing (-0.1 or 0.1)
+  if (radius >= 1 || radius <= 0) radiusIncrement *= -1;
+
+  // Add a % of current radius
+  const changeBy = Math.max(radius, 0.01) * radiusIncrement;
+  radius = radius + changeBy;
+
+  // Make sure we don't exceed 0 or 1
+  radius = clamp(radius);
+
+  // Make a new circle with updated values
+  circle =  {
+    ...circle,
+    radius,
+    radiusIncrement
+  };
+
+  // Save newly calculated ticks and circle into state
+  updateState({ ticks, circle });
 };
 
 /**
@@ -33,6 +68,9 @@ const tick = () => {
  * @returns 
  */
 const drawState = () => {
+  const { circleColour, textColour } = settings;
+  const { circle, ticks } = state;
+
   /** @type HTMLCanvasElement|null */
   const canvasEl = document.querySelector(`#canvas`);
   const ctx = canvasEl?.getContext(`2d`);
@@ -41,8 +79,12 @@ const drawState = () => {
   // Clear canvas
   clear(ctx);
 
-  // TODO: drawing...
-  drawLabelledCircle(ctx, { x: 0.2, y: 0.2, radius: 0.1 }, `pink` );
+  // Draw
+  drawLabelledCircle(ctx, 
+    circle, 
+    circleColour, 
+    ticks.toString(),
+    textColour);
 };
 
 /**
@@ -63,7 +105,6 @@ const clear = (ctx) => {
   //ctx.fillStyle = `hsl(200, 100%, 50%, 0.1%)`;
   //ctx.fillRect(0, 0, width, height);
 };
-
 
 /**
  * Setup and run main loop 
@@ -92,7 +133,6 @@ const setup = () => {
     window.requestAnimationFrame(animationLoop);
   };
   animationLoop();
-
 };
 setup();
 
@@ -106,6 +146,7 @@ function updateState (s) {
     ...s
   });
 }
+
 
 /**
  * Draws a circle with optional text

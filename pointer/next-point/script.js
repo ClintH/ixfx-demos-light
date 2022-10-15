@@ -1,9 +1,11 @@
 import * as Dom from 'https://unpkg.com/ixfx/dist/dom.js';
-import { Points } from 'https://unpkg.com/ixfx/dist/geometry.js';
+import { Points, Vectors } from 'https://unpkg.com/ixfx/dist/geometry.js';
+import { pointTracker } from 'https://unpkg.com/ixfx/dist/data.js';
 
 // Define settings - properties that don't change
 const settings = Object.freeze({
-  tickLoopMs: 10
+  tickLoopMs: 10,
+  circleHue: 320
 });
 
 // Initial state - properties that change as code runs
@@ -14,7 +16,13 @@ let state = Object.freeze({
     center: { x: 0, y: 0 },
   },
   /** @type number */
-  scaleBy: 1
+  scaleBy: 1,
+  tracker: pointTracker({
+    sampleLimit: 10,
+    storeIntermediate: true
+  }),
+  pointer: { x:0.5, y:0.5 },
+  prediction: { x:0.5, y:0.5 }
 });
 
 /**
@@ -27,12 +35,32 @@ const tick = () => {
   // and call updateState({ ... })
 };
 
+const onPointerMove = (evt) => {
+  const { tracker } = state;
+ 
+  // Get a relative version of pointer position
+  const relPos = Points.divide(evt, state.bounds);
+
+  // Add it to the tracker
+  tracker.seen(relPos);
+
+  // Get a vector of initial -> last point
+  const vector = tracker.vectorCartesian;
+
+  // Apply vector to predict the next point
+  const prediction = Points.sum( vector, relPos);
+
+  updateState({ pointer: relPos, prediction });
+};
+
 /**
  * This is run at animation speed. It
  * should just draw based on whatever is in state
  * @returns 
  */
 const drawState = () => {
+  const { circleHue } = settings;
+
   /** @type HTMLCanvasElement|null */
   const canvasEl = document.querySelector(`#canvas`);
   const ctx = canvasEl?.getContext(`2d`);
@@ -41,8 +69,10 @@ const drawState = () => {
   // Clear canvas
   clear(ctx);
 
-  // TODO: drawing...
-  drawLabelledCircle(ctx, { x: 0.2, y: 0.2, radius: 0.1 }, `pink` );
+  const { pointer, prediction } = state;
+  
+  drawLabelledCircle(ctx, prediction, `hsla(${circleHue}, 50%, 50%, 0.5)` );
+  drawLabelledCircle(ctx, pointer, `hsl(${circleHue}, 50%, 90%)` );
 };
 
 /**
@@ -63,7 +93,6 @@ const clear = (ctx) => {
   //ctx.fillStyle = `hsl(200, 100%, 50%, 0.1%)`;
   //ctx.fillRect(0, 0, width, height);
 };
-
 
 /**
  * Setup and run main loop 
@@ -93,6 +122,8 @@ const setup = () => {
   };
   animationLoop();
 
+  window.addEventListener(`pointermove`, onPointerMove);
+
 };
 setup();
 
@@ -110,13 +141,13 @@ function updateState (s) {
 /**
  * Draws a circle with optional text
  * @param {CanvasRenderingContext2D} ctx 
- * @param {{x:number, y:number, radius:number}} circle 
+ * @param {{x:number, y:number, radius?:number}} circle 
  */
 function drawLabelledCircle(ctx, circle, fillStyle = `black`, msg = ``, textFillStyle = `white`)  {
   const { scaleBy } = state;
 
   // Convert relative radius to absolute
-  const radius = circle.radius * (scaleBy / 2);
+  const radius = (circle.radius ?? 0.1) * (scaleBy / 2);
 
   // Convert x,y to absolute point
   const abs = Points.multiply(circle, state.bounds);
@@ -137,4 +168,14 @@ function drawLabelledCircle(ctx, circle, fillStyle = `black`, msg = ``, textFill
     ctx.fillText(msg, 0, 0);
   }
   ctx.restore();
+}
+
+
+function setText(id, msg) {
+  const el = document.getElementById(id);
+  if (el) {
+    if (el.innerText !== msg) {
+      el.innerText = msg;
+    }
+  }
 }
