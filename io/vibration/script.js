@@ -3,7 +3,7 @@
  * See README.md
  */
 import { defaultErrorHandler } from 'https://unpkg.com/ixfx/dist/dom.js';
-import { adsrSample, defaultAdsrOpts } from 'https://unpkg.com/ixfx/dist/modulation.js';
+import { adsrIterable, defaultAdsrOpts } from 'https://unpkg.com/ixfx/dist/modulation.js';
 import { IterableAsync } from 'https://unpkg.com/ixfx/dist/util.js';
 import { repeat } from 'https://unpkg.com/ixfx/dist/flow.js';
 import { interleave } from 'https://unpkg.com/ixfx/dist/arrays.js';
