@@ -135,12 +135,12 @@ const setup = () => {
   });
 
 
-  document.getElementById(`btnCurrentReset`).addEventListener(`click`, () => {
+  document.getElementById(`btnCurrentReset`)?.addEventListener(`click`, () => {
     clearPointers();
   });
 
 
-  document.getElementById(`btnClearLog`).addEventListener(`click`, () => {
+  document.getElementById(`btnClearLog`)?.addEventListener(`click`, () => {
     log.clear();
   });
 };

@@ -1,7 +1,7 @@
 // @ts-ignore
 import { Remote } from "https://unpkg.com/@clinth/remote@latest/dist/index.mjs";
 import * as Dom from 'https://unpkg.com/ixfx/dist/dom.js';
-import { ExpiringMap } from 'https://unpkg.com/ixfx/dist/collections.js';
+import { Maps } from 'https://unpkg.com/ixfx/dist/collections.js';
 import { Pool } from 'https://unpkg.com/ixfx/dist/data.js';
 import { Points } from 'https://unpkg.com/ixfx/dist/geometry.js';
 import { Sync as IterableSync } from 'https://unpkg.com/ixfx/dist/generators.js';
@@ -22,7 +22,7 @@ const settings = Object.freeze({
   smoothingAmt: 0.8,
   tickRateMs: 200,
   pool: new Pool.Pool({
-    autoExpireAfterMs: 5000,
+    resourcesWithoutUserExpireAfterMs: 5000,
     fullPolicy:`evictOldestUser`,
     capacity: 5,
     generate:() => {
@@ -43,7 +43,7 @@ let state = Object.freeze({
    */
   bounds: { width: 0, height: 0, center: { x: 0, y: 0 } },
 
-  gradientStops: new ExpiringMap({
+  gradientStops: new Maps.ExpiringMap({
     capacity: 5
   })
 });
