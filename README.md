@@ -9,4 +9,4 @@
 
 Edit demos under `src`. You can mix and match Javascript and Typescript files.
 
-There is a build process that copies them to `docs` - but do not edit them there since they will get overwritten.
+Do not edit any files under `docs`. These are automatically produced from what is in `src`.

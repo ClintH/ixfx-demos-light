@@ -2,12 +2,12 @@
 
 Gitpod is the recommended choice because it has better support for websockets.
 
-Note that these cloud providers usually delete unused files after a period of inactivity. For Gitpod, it's 14 days. Be sure to download a local copy of your files.
+A warning that these cloud providers can delete unused files after a period of inactivity. For Gitpod, it's 14 days. Be sure to download a local copy of your files.
 
 # Gitpod
 
-1. Sign up or sign in to Gitpod
-2. [Fork the repository](https://gitpod.io/#https://github.com/ClintH/ixfx-demos-light). You can accept the default options. 
+1. Sign up or sign in to [Gitpod](https://gitpod.io)
+2. [Fork the repository](https://gitpod.io/#https://github.com/ClintH/ixfx-demos-light) You can accept the default options. 
 
 During startup, it will ask if you want to install recommended extensions. Say 'Install' for all of these.
 
@@ -19,7 +19,7 @@ If for some reason you lose the address to view your running sketches, click on 
 
 By default, the server that starts does not include websockets. In the Gitpod terminal, press CTRL+C to stop the server, and run `npm run ws`.
 
-Because the connection is encrypted, you'll have to change the websocket URL from `ws://` to `wss://`
+Because the connection is encrypted, in your sketch you'll have to change the websocket URL from `ws://` to `wss://`
 
 Eg:
 
@@ -31,6 +31,40 @@ const settings = Object.freeze({
   })
 });
 ```
+
+## Local editor
+
+Gitpod has the neat option of editing the files locally, but running them in the cloud. To access this, click on the burger menu at the top-left and choose 'Gitpod: Open in VS Code'. There will be a heck of of a lot of prompts to install this and that, but if it all works, you should get a local VS Code editor.
+
+# Codesandbox
+
+1. Sign up or sign in to [CodeSandbox](https://codesandbox.io/)
+2. [Fork the repository](https://githubbox.com/clinth/ixfx-demos-light), making sure you have your own copy.
+
+You'll get a preview window of your server. Use the overlapped boxes icon at the top of the preview to open it in a new window. Close the mini preview.
+
+## Websockets
+
+By default, the server that starts does not include websockets. Below the code editor, you should see a terminal and 'Start'. Hover over it and click the 'X' to stop that task. From the > button, select 'ws'. This will start the websocket-enabled server.
+
+Because the connection is encrypted, in your sketch you'll have to change the websocket URL from `ws://` to `wss://`
+Eg:
+
+```js
+const settings = Object.freeze({
+  remote: new Remote({
+    allowNetwork: true,
+    websocket: `wss://${window.location.host}/ws`
+  })
+});
+```
+
+# Glitch
+
+1. Login/signup for [Glitch](https://glitch.com)
+2. [Remix the demos project](https://glitch.com/edit/#!/ixfx-demos)
+
+Check the README.md there.
 
 # Stackblitz
 
