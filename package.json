@@ -1,50 +1,38 @@
 {
-  "name": "ixfx-demos",
-  "version": "1.0.0",
-  "description": "Demos of ixfx",
-  "main": "index.html",
-  "private": "true",
+  "name": "ixfx-demos-light",
+  "version": "0.0.0",
+  "description": "",
   "type": "module",
-  "engines": {
-    "node": ">=14.0.0"
-  },
-  "scripts": {
-    "make-light": "node make-light.js",
-    "serve:ws": "node ws-server.js",
-    "serve:http": "five-server",
-    "serve:express": "node express-ws-server.js",
-    "serve": "concurrently npm:serve:*",
-    "ngrok": "ngrok start --all --config ./ngrok.yml",
-    "start": "npm run serve:express"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ClintH/ixfx-demos.git"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ClintH/ixfx-demos/issues"
-  },
-  "homepage": "https://github.com/ClintH/ixfx-demos#readme",
-  "dependencies": {
-    "five-server": "^0.3.1",
-    "ws": "^8.9.0"
+  "scripts": {
+    "start": "npm run ixfx && concurrently npm:watch:* npm:serve:http",
+    "ws": "npm run ixfx && concurrently npm:watch:* npm:serve:ws",
+    "build": "npm run clean && npm run static && npm run ixfx && tsc",
+    "static": "cpx \"src/**/*.{html,css,js}\" docs",
+    "clean": "rimraf docs",
+    "ixfx": "rimraf docs/ixfx && copyfiles --up 3 node_modules/ixfx/dist/**.* docs/ixfx",
+    "watch:tsc": "tsc --watch",
+    "watch:static": "cpx \"src/**/*.{html,css,js}\" docs --watch",
+    "serve:http": "five-server",
+    "serve:ws": "node express-ws-server"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^6.4.0",
     "body-parser": "^1.20.2",
     "concurrently": "^8.2.0",
-    "cpy": "^9.0.1",
-    "del": "^7.0.0",
-    "eslint": "^8.20.0",
+    "copyfiles": "^2.4.1",
+    "cpx2": "^5.0.0",
     "eslint-plugin-unicorn": "^48.0.1",
     "express": "^4.18.2",
     "express-ws": "^5.0.2",
-    "replace-in-file": "^6.3.5"
+    "five-server": "^0.3.1",
+    "ixfx": "latest",
+    "rimraf": "^5.0.1",
+    "typescript": "^5.1.6"
   },
   "stackblitz": {
-    "startCommand": "concurrently 'npm:serve:*'"
+    "startCommand": "npm run start"
   }
 }

@@ -2,7 +2,7 @@
 // You shouldn't need to modify this file.
 // ----
 // Config
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 5555;
 const quiet = process.env.QUIET || true;
 // ---
 
@@ -48,7 +48,7 @@ app.use(BodyParser.urlencoded({
   extended: false
 }));
 //app.use(CookieParser());
-app.use(Express.static(path.join(__dirname, `./`)));
+app.use(Express.static(path.join(__dirname, `./docs/`)));
 
 // catch 404 and forward to error handler
 app.use(function (request, resource, next) {

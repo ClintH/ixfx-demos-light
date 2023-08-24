@@ -1,6 +1,6 @@
 {
   "port": 5555,
-  "open": "index.html",
+  "open": "docs/index.html",
   "watch": [
     "**/*"
   ],

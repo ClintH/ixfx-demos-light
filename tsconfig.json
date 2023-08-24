@@ -1,5 +1,26 @@
 {
   "compilerOptions": {
-    "target": "esnext"
-  }
+    "module": "ESNext",
+    "sourceMap": true,
+    "moduleResolution": "Bundler",
+    "target": "ES2022",
+    "allowImportingTsExtensions": false,
+    "isolatedModules": true,
+    "allowJs": true,
+    "strict": true,
+    "outDir": "./docs",
+    "skipLibCheck": true,
+    "rootDirs": [
+      "docs",
+      "src"
+    ]
+  },
+  "include": [
+    "./src"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/node_modules/*",
+    "docs/*"
+  ]
 }
