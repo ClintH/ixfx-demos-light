@@ -10,3 +10,8 @@
 Edit demos under `src`. You can mix and match Javascript and Typescript files.
 
 Do not edit any files under `docs`. These are automatically produced from what is in `src`.
+
+## About ixfx
+
+* [ixfx Guide](https://clinth.github.io/ixfx-docs/)
+* [ixfx API documentation](https://clinth.github.io/ixfx/) and [source code](https://github.com/clinth/ixfx)

@@ -41,11 +41,13 @@ Gitpod has the neat option of editing the files locally, but running them in the
 1. Sign up or sign in to [CodeSandbox](https://codesandbox.io/)
 2. [Open the repository](https://githubbox.com/clinth/ixfx-demos-light), and click 'Fork' from the top-right to make a copy.
 
+At the right, you'll see a dialog asking you which process you want to start by default. If you want to just have a webserer, choose 'npm run start'. If you need websocket functionality, use 'npm run ws'.
+
 You'll get a preview window of your server. Use the overlapped boxes icon at the top of the preview to open it in a new window. Close the mini preview.
 
 ## Websockets
 
-By default, the server that starts does not include websockets. Below the code editor, you should see a terminal and 'Start'. Click in it, and press CTRL+C to stop it. From the > button, select 'New task' and then choose 'ws'. This will start the websocket-enabled server.
+By default, the server that starts does not include websockets. Below the code editor, you should see a terminal and 'Start'. Click in it, and press CTRL+C to stop it. From the > button, select 'ws' to start the websocket-enabled server instead.
 
 Because the connection is encrypted, in your sketch you'll have to change the websocket URL from `ws://` to `wss://`
 Eg:
