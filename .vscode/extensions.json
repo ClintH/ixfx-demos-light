@@ -1,8 +1,6 @@
 {
   "recommendations": [
     "dbaeumer.vscode-eslint",
-    "motform.ixfx-highlight",
-    "yandeu.five-server",
-    "philnash.ngrok-for-vscode"
+    "motform.ixfx-highlight"
   ]
 }

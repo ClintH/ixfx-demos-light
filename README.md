@@ -2,8 +2,8 @@
 
 ## Getting started
 
-* [If you are editing files locally](./local-machine.md)
-* [If you are editing files on a web host such as Stackblitz](./remote-machine.md)
+* [I want to run a server on my computer and edit locally](./local-machine.md)
+* [I want to run things on the cloud](./remote-machine.md)
 
 ## Editing
 
