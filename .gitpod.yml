@@ -11,3 +11,4 @@ ports:
     port: 5555
     onOpen: open-browser
     visibility: public
+    protocol: https

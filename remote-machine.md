@@ -1,10 +1,33 @@
 # Running on the cloud
 
- [Fork the repository](https://gitpod.io/#https://github.com/ClintH/ixfx-demos-light), signing up for Gitpod along the way.
+Gitpod is the recommended choice because it has better support for websockets.
 
- During startup, it will ask if you want to install recommended extensions. Say 'Install' for all of these.
+Note that these cloud providers usually delete unused files after a period of inactivity. For Gitpod, it's 14 days. Be sure to download a local copy of your files.
 
 # Gitpod
+
+[Fork the repository](https://gitpod.io/#https://github.com/ClintH/ixfx-demos-light), signing up for Gitpod along the way.
+
+During startup, it will ask if you want to install recommended extensions. Say 'Install' for all of these.
+
+You'll also get a notification 'A service is available on port 5555', with 'Open Preview' and 'Open Browser' as options. Choose 'Open Browser' to view your web server in a new window (recommended).
+
+## Websockets
+
+By default, the server that starts does not include websockets. In the Gitpod terminal, press CTRL+C to stop the server, and run `npm run ws`.
+
+Because the connection is encrypted, you'll have to change the websocket URL from `ws://` to `wss://`
+
+Eg:
+
+```js
+const settings = Object.freeze({
+  remote: new Remote({
+    allowNetwork: true,
+    websocket: `wss://${window.location.host}/ws`
+  })
+});
+```
 
 # Stackblitz
 
