@@ -6,11 +6,14 @@ Note that these cloud providers usually delete unused files after a period of in
 
 # Gitpod
 
-[Fork the repository](https://gitpod.io/#https://github.com/ClintH/ixfx-demos-light), signing up for Gitpod along the way.
+1. Sign up or sign in to Gitpod
+2. [Fork the repository](https://gitpod.io/#https://github.com/ClintH/ixfx-demos-light). You can accept the default options. 
 
 During startup, it will ask if you want to install recommended extensions. Say 'Install' for all of these.
 
 You'll also get a notification 'A service is available on port 5555', with 'Open Preview' and 'Open Browser' as options. Choose 'Open Browser' to view your web server in a new window (recommended).
+
+If for some reason you lose the address to view your running sketches, click on 'Ports: 5555' which should appear in the status bar of Gitpod. This will open a panel, and it should list 'ixfx demos' with a green dot. Click on the globe icon to open it in a browser.
 
 ## Websockets
 
