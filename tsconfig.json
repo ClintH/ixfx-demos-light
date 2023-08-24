@@ -8,19 +8,10 @@
     "isolatedModules": true,
     "allowJs": true,
     "strict": true,
-    "outDir": "./docs",
     "skipLibCheck": true,
-    "rootDirs": [
-      "docs",
-      "src"
-    ]
+    "outDir": "./build"
   },
   "include": [
-    "./src"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/node_modules/*",
-    "docs/*"
+    "."
   ]
 }
