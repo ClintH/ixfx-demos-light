@@ -1,7 +1,5 @@
 import { clamp } from 'https://unpkg.com/ixfx/dist/data.js';
-import { continuously } from 'https://unpkg.com/ixfx/dist/flow.js';
-import { IterableAsync } from  'https://unpkg.com/ixfx/dist/util.js';
-import { adsr, defaultAdsrOpts as defaultAdsrOptions, adsrIterable } from 'https://unpkg.com/ixfx/dist/modulation.js';
+import { defaultAdsrOpts as defaultAdsrOptions, adsrIterable } from 'https://unpkg.com/ixfx/dist/modulation.js';
 
 const settings = Object.freeze({
   sampleRateMs: 5,
