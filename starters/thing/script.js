@@ -1,4 +1,6 @@
 import * as Thing from './thing.js';
+import * as Util from './util.js';
+
 import {clamp } from 'https://unpkg.com/ixfx/dist/data.js';
 
 // Settings for sketch
@@ -63,9 +65,15 @@ function setup() {
   const element = /** @type HTMLElement */(document.querySelector(`#${settings.thingId}`));
   if (!element) throw new Error(`Element with id ${settings.thingId} not found`);
   element.addEventListener(`pointermove`, (event) => {
-    const relativeMovement = (event.movementX/window.innerWidth + event.movementY/window.innerHeight);
-    let movement = clamp(state.movement + relativeMovement);
-    saveState({ movement });
+
+    // Add up all the movement
+    let movement = Util.addUpMovement(event);
+
+    // Make sure total is within 0..1 range
+    movement = clamp(state.movement + movement);
+
+    // Save it
+    saveState({ movement:0.2 });
   });
 
   // Update thing at a fixed rate
@@ -74,7 +82,6 @@ function setup() {
     saveState({ 
       thing: Thing.update(state.thing, state)
     });
-
     // Visually update based on new state
     Thing.use(state.thing);
   }, settings.thingUpdateSpeedMs);
