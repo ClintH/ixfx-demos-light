@@ -8,40 +8,13 @@ To host your code remotely, it's recommended to try one of these options:
 * CodeSandbox
 * Glitch
 
-## Run on Gitpod
-
-* [Open via Gitpod](https://gitpod.io/#https://github.com/ClintH/ixfx-demos-light)
-* After signing in and as the project loads, you'll get prompted to open the workspace file. Opt for this.
-* If you get prompted to make your server public, choose yes.
-* The server will automatically start. Click on 'Ports: 8080' that appears in the bottom-right of the status bar and view ports.
-* If the row corresponding with port '8080' does not have state 'open (public)', right-click and choose 'Make public'
-* Click the 'copy' icon in that URL to grab the URL to your server. This is what you need to send to your mobile device and open up.
-
-You can test it works by opening the [pointer-remote sketch](./pointer/remote/)
-
-With a few extra steps, it's possible to use your _local_ copy of VS Code to edit projects hosted and running on Gitpod.
-
-## Run on CodeSandbox
-
-1. Sign in to [Codesandbox](https://codesandbox.io/)
-2. [Open via Codesandbox](https://githubbox.com/clinth/ixfx-demos-light)
-3. Click 'Fork' in the left-hand panel
-
-The server URL shown in the preview panel is what you need to open on a mobile device. You can test it works by opening the [pointer-remote sketch](./pointer/remote/)
-
-## Run on Glitch
-
-* [Follow the instructions on the Glitch-hosted demos](https://glitch.com/edit/#!/ixfx-demos?path=package.json%3A1%3A0)
+[Read more on how to set these up](https://github.com/ClintH/ixfx-demos-npm/blob/main/remote-machine.md)
 
 ## Run on your own machine
 
 ### Step 1. Install Node.js
 
-You can test if you have Node.js installed by opening a terminal and running `node -v`. If you get an error like command not found, you do not have Node.js installed.
-
-Although Node.js offers installers for Windows and Mac, these aren't recommended.
-
-Instead, install Node via [Fast Node Manager](https://github.com/Schniz/fnm).
+[Instructions](./install-nodejs.md)
 
 ### Step 2. Install packages
 
@@ -56,3 +29,34 @@ npm start
 ```
 
 Use CMD/CTRL+C to stop the server.
+
+# Host on Glitch
+
+In this scenario, we'll continue to use Five Server and edit code locally, but host the websocket server on Glitch.
+
+
+1. Start up a remix of this [Glitch project](https://glitch.com/edit/#!/ch-remote-test). 
+2. When you set up Remote, use the URL to your Glitch project.
+
+Eg:
+
+```js
+const settings = Object.freeze({
+  remote: new Remote({
+    allowNetwork: true,
+    websocket: `wss://MY-ZANY-PROJECT-NAME.glitch.me/ws`
+  })
+});
+```
+
+If you are using a home wifi network, or have your devices hot-spotted together, you can open your webserver by its IP address. When Five Server starts up, you'll see something like:
+
+```
+Five Server running at:
+> Local:    http://localhost:5555
+> Network:  http://192.168.0.141:5555
+```
+
+On your mobile device (again, if it's on the same wifi network) you should be able to open the URL given for 'Network'. In the above example, http://192.168.0.141:5555.
+
+To access your sketches outside of your network, you'll need to add ngrok to the mix. Please see [ngrok](./ngrok.md) for more on this.

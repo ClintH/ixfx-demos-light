@@ -1,5 +1,7 @@
 // @ts-ignore
 import { Remote } from "https://unpkg.com/@clinth/remote@latest/dist/index.mjs";
+// import { inlineConsole } from "https://unpkg.com/ixfx/dist/dom.js";
+// inlineConsole();
 
 const settings = Object.freeze({
   remote: new Remote({
