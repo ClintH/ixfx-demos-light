@@ -1,5 +1,5 @@
 import { Points } from 'https://unpkg.com/ixfx/dist/geometry.js';
-import {Forces} from 'https://unpkg.com/ixfx/dist/modulation.js';
+import { Forces } from 'https://unpkg.com/ixfx/dist/modulation.js';
 import * as Util from './util.js';
 
 const settings = Object.freeze({
