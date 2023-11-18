@@ -4,11 +4,11 @@
  */
 import { movingAverage } from 'https://unpkg.com/ixfx/dist/data.js';
 import { Points } from 'https://unpkg.com/ixfx/dist/geometry.js';
-import { mapObject } from 'https://unpkg.com/ixfx/dist/util.js';
+import { Immutable } from 'https://unpkg.com/ixfx/dist/bundle.js';
 
 const settings = Object.freeze({
   // Create an averager over {x, y}
-  average: mapObject({ x:0, y:0 }, (v) => movingAverage(100))
+  average: Immutable.map({ x: 0, y: 0 }, (v) => movingAverage(100))
 });
 
 
@@ -27,7 +27,7 @@ const addAverage = (absX, absY) => {
   const { x, y } = settings.average;
 
   // Add relative x,y to their respective movingAverage instance
-  saveState ({
+  saveState({
     avg: {
       x: x.add(absX / window.innerWidth),
       y: y.add(absY / window.innerHeight)
@@ -92,7 +92,7 @@ setup();
  * Update state
  * @param {Partial<state>} s 
  */
-function saveState (s) {
+function saveState(s) {
   state = Object.freeze({
     ...state,
     ...s
