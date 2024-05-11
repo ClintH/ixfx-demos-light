@@ -1,4 +1,4 @@
-import { pingPongPercent, count } from 'https://unpkg.com/ixfx/dist/generators.js';
+import { pingPongPercent, count } from 'https://unpkg.com/ixfx/dist/numbers.js';
 import { forEach } from 'https://unpkg.com/ixfx/dist/flow.js';
 import { CanvasHelper } from 'https://unpkg.com/ixfx/dist/dom.js';
 
@@ -59,11 +59,8 @@ const drawGradientCircle = (radiusAbs) => {
 };
 
 const use = () => {
-  const canvasElement = /** @type {HTMLCanvasElement|null} */(document.querySelector(`#canvas`));
-  const context = canvasElement?.getContext(`2d`);
-  if (!context || !canvasElement) return;
-
-  context.clearRect(0, 0, canvasElement.width, canvasElement.height);
+  const { canvas } = settings;
+  canvas.clear();
   draw();
 };
 

@@ -1,7 +1,7 @@
 import { Svg, Colour } from 'https://unpkg.com/ixfx/dist/visual.js';
-import * as Generators from 'https://unpkg.com/ixfx/dist/generators.js';
+import * as Numbers from 'https://unpkg.com/ixfx/dist/numbers.js';
 import * as Dom from 'https://unpkg.com/ixfx/dist/dom.js';
-import { Lines, Points } from 'https://unpkg.com/ixfx/dist/geometry.js';
+import { Points } from 'https://unpkg.com/ixfx/dist/geometry.js';
 
 const settings = Object.freeze({
   // Relative middle
@@ -10,7 +10,7 @@ const settings = Object.freeze({
   strokeWidthMin: 3,
   strokeStyle: Colour.getCssVariable(`arc`, `#FACF5A`),
   // Loop up and down again from 0 and 100%, 1% at a time
-  genPingPong: Generators.pingPongPercent(0.01)
+  genPingPong: Numbers.pingPongPercent(0.01)
 });
 
 let state = Object.freeze({
@@ -56,7 +56,7 @@ const updateSvg = () => {
   // Delete all existing lines
   svg.innerHTML = ``;
 
-  for (const [ id, p ] of Object.entries(pointers)) {
+  for (const [id, p] of Object.entries(pointers)) {
     // Create line for pointer
     const line = { a: originAbs, b: p };
 
@@ -123,7 +123,7 @@ setup();
  * Update state
  * @param {Partial<state>} s 
  */
-function saveState (s) {
+function saveState(s) {
   state = Object.freeze({
     ...state,
     ...s
