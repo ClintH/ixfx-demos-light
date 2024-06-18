@@ -4,8 +4,8 @@
  */
 import { defaultErrorHandler } from 'https://unpkg.com/ixfx/dist/dom.js';
 import { adsrIterable, defaultAdsrOpts as defaultAdsrOptions } from 'https://unpkg.com/ixfx/dist/modulation.js';
-import { IterableAsync } from 'https://unpkg.com/ixfx/dist/util.js';
-import { interval, repeat } from 'https://unpkg.com/ixfx/dist/flow.js';
+import { Async } from 'https://unpkg.com/ixfx/dist/iterables.js';
+import { repeat } from 'https://unpkg.com/ixfx/dist/flow.js';
 import { interleave } from 'https://unpkg.com/ixfx/dist/arrays.js';
 
 const settings = Object.freeze({
@@ -50,7 +50,7 @@ const onPointerDown = event => {
   const patternArray = pattern
     .split(`, `)
     .map(string_ => Number.parseFloat(string_));
-  
+
   console.log(`Pattern:`);
   console.log(patternArray);
 
@@ -72,13 +72,13 @@ const setup = async () => {
 
   // Get envelope as an iterable
   const iter = await adsrIterable({ env: settings.envOpts, sampleRateMs: settings.sampleRateMs });
-  let envelope = await IterableAsync.toArray(iter);
+  let envelope = await Async.toArray(iter);
 
   // Map them to milliseconds, based on scaling setting
   envelope = envelope.map(v => Math.round(v * settings.envScale));
 
   // Generate an off pulse for each of the envelope's on pauses
-  const pauses = [ ...repeat(envelope.length, () => settings.restMs) ];
+  const pauses = [...repeat(envelope.length, () => settings.restMs)];
 
   // Combine them together with https://unpkg.com/ixfx/dist's interleave function
   saveState({ envData: interleave(envelope, pauses) });
@@ -100,7 +100,7 @@ setup();
  * Save state
  * @param {Partial<state>} s 
  */
-function saveState (s) {
+function saveState(s) {
   state = Object.freeze({
     ...state,
     ...s
