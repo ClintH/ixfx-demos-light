@@ -1,9 +1,9 @@
 
 import { clamp } from 'https://unpkg.com/ixfx/dist/data.js';
-import { perSecond } from 'https://unpkg.com/ixfx/dist/modulation.js';
+import { Sources } from 'https://unpkg.com/ixfx/dist/modulation.js';
 
 const settings = Object.freeze({
-  ageMod: perSecond(0.1)
+  ageMod: Sources.perSecond(0.1)
 });
 
 let state = Object.freeze({
@@ -16,7 +16,7 @@ const use = () => {
 
   const element = document.querySelector(`#ageValue`);
   if (element) {
-    element.textContent = Math.floor(age*100) + `%`;
+    element.textContent = Math.floor(age * 100) + `%`;
   }
 };
 
@@ -25,7 +25,7 @@ const update = () => {
   let { age } = state;
 
   age += ageMod();
-  
+
   saveState({
     age: clamp(age)
   });
@@ -48,7 +48,7 @@ setup();
  * Update state
  * @param {Partial<state>} s 
  */
-function saveState (s) {
+function saveState(s) {
   state = Object.freeze({
     ...state,
     ...s

@@ -2,15 +2,13 @@
  * Demonstrates using two movingAverage instances to smooth
  * pointer x,y positions in order to position an element.
  */
-import { movingAverage } from 'https://unpkg.com/ixfx/dist/data.js';
+import { mapObjectShallow, movingAverage } from 'https://unpkg.com/ixfx/dist/data.js';
 import { Points } from 'https://unpkg.com/ixfx/dist/geometry.js';
-import { Immutable } from 'https://unpkg.com/ixfx/dist/bundle.js';
 
 const settings = Object.freeze({
-  // Create an averager over {x, y}
-  average: Immutable.map({ x: 0, y: 0 }, (v) => movingAverage(100))
+  // Create an averager for x and y
+  average: mapObjectShallow({ x: 0, y: 0 }, args => movingAverage(100))
 });
-
 
 let state = Object.freeze({
   avg: { x: 0, y: 0 },

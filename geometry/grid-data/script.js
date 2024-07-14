@@ -1,7 +1,8 @@
 
-import { Grids, Points } from 'https://unpkg.com/ixfx/dist/geometry.js';
-import { Arrays, Maps } from 'https://unpkg.com/ixfx/dist/collections.js';
+import { Grids } from 'https://unpkg.com/ixfx/dist/geometry.js';
+import { Maps } from 'https://unpkg.com/ixfx/dist/collections.js';
 import { CanvasHelper } from 'https://unpkg.com/ixfx/dist/dom.js';
+import { Arrays } from 'https://unpkg.com/ixfx/dist/data.js';
 
 const settings = Object.freeze({
   canvas: new CanvasHelper(`#canvas`, { fill: `viewport` }),
