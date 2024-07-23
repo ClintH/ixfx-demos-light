@@ -1,4 +1,4 @@
-import { clamp } from 'https://unpkg.com/ixfx/dist/data.js';
+import { clamp } from 'https://unpkg.com/ixfx/dist/numbers.js';
 import { StateMachine, continuously } from 'https://unpkg.com/ixfx/dist/flow.js';
 
 // Settings

@@ -1,5 +1,5 @@
 import { CanvasHelper } from 'https://unpkg.com/ixfx/dist/dom.js';
-import { clamp } from 'https://unpkg.com/ixfx/dist/data.js';
+import { clamp } from 'https://unpkg.com/ixfx/dist/numbers.js';
 import * as Things from './thing.js';
 import * as Util from './util.js';
 

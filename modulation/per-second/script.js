@@ -1,5 +1,5 @@
 
-import { clamp } from 'https://unpkg.com/ixfx/dist/data.js';
+import { clamp } from 'https://unpkg.com/ixfx/dist/numbers.js';
 import { Sources } from 'https://unpkg.com/ixfx/dist/modulation.js';
 
 const settings = Object.freeze({

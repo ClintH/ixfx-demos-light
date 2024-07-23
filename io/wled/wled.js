@@ -6,7 +6,7 @@
  */
 import { Colour } from 'https://unpkg.com/ixfx/dist/visual.js';
 import * as Arrays from 'https://unpkg.com/ixfx/dist/arrays.js';
-import { wrapRange } from 'https://unpkg.com/ixfx/dist/data.js';
+import { wrapRange } from 'https://unpkg.com/ixfx/dist/numbers.js';
 import { StateMachine } from 'https://unpkg.com/ixfx/dist/flow.js';
 import { SimpleEventEmitter } from 'https://unpkg.com/ixfx/dist/events.js';
 

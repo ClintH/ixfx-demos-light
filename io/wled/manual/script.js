@@ -1,5 +1,5 @@
 import { HslOff, Wled } from "../wled.js";
-import { clamp } from 'https://unpkg.com/ixfx/dist/data.js';
+import { clamp } from 'https://unpkg.com/ixfx/dist/numbers.js';
 import { continuously } from 'https://unpkg.com/ixfx/dist/flow.js';
 import { frequencyTimer } from 'https://unpkg.com/ixfx/dist/flow.js';
 import { Oscillators } from 'https://unpkg.com/ixfx/dist/modulation.js';

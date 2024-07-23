@@ -1,7 +1,7 @@
 import { CanvasHelper } from 'https://unpkg.com/ixfx/dist/dom.js';
 import { repeat } from 'https://unpkg.com/ixfx/dist/flow.js';
 import { jitter } from 'https://unpkg.com/ixfx/dist/modulation.js';
-import { flip } from 'https://unpkg.com/ixfx/dist/data.js';
+import { flip } from 'https://unpkg.com/ixfx/dist/numbers.js';
 import { gaussian } from 'https://unpkg.com/ixfx/dist/random.js';
 import * as Particle from './particle.js';
 

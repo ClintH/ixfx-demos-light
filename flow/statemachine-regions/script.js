@@ -1,4 +1,4 @@
-import { clamp } from 'https://unpkg.com/ixfx/dist/data.js';
+import { clamp } from 'https://unpkg.com/ixfx/dist/numbers.js';
 import { CanvasHelper } from 'https://unpkg.com/ixfx/dist/dom.js';
 import { Colour } from 'https://unpkg.com/ixfx/dist/visual.js';
 import { StateMachine, Elapsed } from 'https://unpkg.com/ixfx/dist/flow.js';

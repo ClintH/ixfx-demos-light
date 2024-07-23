@@ -1,7 +1,6 @@
 import { CanvasHelper } from 'https://unpkg.com/ixfx/dist/dom.js';
 import { Points, SurfacePoints } from 'https://unpkg.com/ixfx/dist/geometry.js';
-import { numericRange } from 'https://unpkg.com/ixfx/dist/numbers.js';
-import { clamp } from 'https://unpkg.com/ixfx/dist/data.js';
+import { numericRange, clamp } from 'https://unpkg.com/ixfx/dist/numbers.js';
 const piPi = Math.PI * 2;
 
 const settings = Object.freeze({

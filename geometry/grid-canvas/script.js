@@ -10,7 +10,7 @@ import { Grids, Points } from 'https://unpkg.com/ixfx/dist/geometry.js';
 import * as Modulation from 'https://unpkg.com/ixfx/dist/modulation.js';
 import * as Flow from 'https://unpkg.com/ixfx/dist/flow.js';
 import { CanvasHelper } from 'https://unpkg.com/ixfx/dist/dom.js';
-import { scalePercent } from 'https://unpkg.com/ixfx/dist/data.js';
+import { scalePercent } from 'https://unpkg.com/ixfx/dist/numbers.js';
 
 const settings = Object.freeze({
   canvas: new CanvasHelper(`#canvas`, { fill: `viewport` }),

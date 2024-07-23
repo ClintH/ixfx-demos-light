@@ -1,5 +1,5 @@
 import { Points } from 'https://unpkg.com/ixfx/dist/geometry.js';
-import { interpolate, clamp } from 'https://unpkg.com/ixfx/dist/data.js';
+import { interpolate, clamp } from 'https://unpkg.com/ixfx/dist/numbers.js';
 import * as Util from './util.js';
 import { CanvasHelper } from 'https://unpkg.com/ixfx/dist/dom.js';
 

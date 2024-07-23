@@ -1,4 +1,4 @@
-import { scale, clamp } from 'https://unpkg.com/ixfx/dist/data.js';
+import { scale, clamp } from 'https://unpkg.com/ixfx/dist/numbers.js';
 import { jitter } from 'https://unpkg.com/ixfx/dist/modulation.js';
 import { CanvasHelper } from 'https://unpkg.com/ixfx/dist/dom.js';
 

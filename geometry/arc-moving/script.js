@@ -1,10 +1,9 @@
 import { Arcs } from 'https://unpkg.com/ixfx/dist/geometry.js';
-import { timeout, continuously } from 'https://unpkg.com/ixfx/dist/flow.js';
-import * as Numbers from 'https://unpkg.com/ixfx/dist/numbers.js';
+import { timeout } from 'https://unpkg.com/ixfx/dist/flow.js';
+import { Modulation, Numbers } from 'https://unpkg.com/ixfx/dist/bundle.js';
 
 const settings = Object.freeze({
-  // Loop back and forth between 0 and 1, 0.0.1 steps at a time
-  pingPong: Numbers.pingPongPercent(0.01),
+  wave: Modulation.wave({ hertz: 0.1 }),
   // Arc settings
   endAngle: 180,
   radiusProportion: 0.3,
@@ -20,7 +19,7 @@ let state = Object.freeze({
 // Update state of world
 const update = () => {
   // Get fields we need
-  const { pingPong, radiusProportion } = settings;
+  const { wave, radiusProportion } = settings;
   const bounds = state.bounds;
   const center = bounds.center;
 
@@ -36,8 +35,8 @@ const update = () => {
     settings.endAngle,
     center);
 
-  // Calculate relative point on arc using current pingpong amount
-  const coord = Arcs.interpolate(pingPong.next().value, arc);
+  // Calculate relative point on arc using current wave amount
+  const coord = Arcs.interpolate(wave(), arc);
 
   // Update state
   saveState({

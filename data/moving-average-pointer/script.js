@@ -2,8 +2,9 @@
  * Demonstrates using two movingAverage instances to smooth
  * pointer x,y positions in order to position an element.
  */
-import { mapObjectShallow, movingAverage } from 'https://unpkg.com/ixfx/dist/data.js';
+import { movingAverage } from 'https://unpkg.com/ixfx/dist/numbers.js';
 import { Points } from 'https://unpkg.com/ixfx/dist/geometry.js';
+import { mapObjectShallow } from 'https://unpkg.com/ixfx/dist/data.js';
 
 const settings = Object.freeze({
   // Create an averager for x and y

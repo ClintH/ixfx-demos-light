@@ -1,4 +1,4 @@
-import { scalePercent, clamp } from 'https://unpkg.com/ixfx/dist/data.js';
+import { clamp } from 'https://unpkg.com/ixfx/dist/numbers.js';
 
 /**
  * Convert relative point to absolute.

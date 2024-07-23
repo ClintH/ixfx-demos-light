@@ -1,6 +1,5 @@
 import { CanvasHelper } from 'https://unpkg.com/ixfx/dist/dom.js';
-import { scalePercent, clamp } from 'https://unpkg.com/ixfx/dist/data.js';
-import { Points, Circles } from 'https://unpkg.com/ixfx/dist/geometry.js';
+import { Circles } from 'https://unpkg.com/ixfx/dist/geometry.js';
 import * as Util from './util.js';
 
 // Define settings
